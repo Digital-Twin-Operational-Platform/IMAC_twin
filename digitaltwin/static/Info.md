@@ -1,0 +1,1 @@
+The static folder contains the "static" eliments for the front-end design. This includes text formating via css, static images, and other various components that the HTML might use.

@@ -1,0 +1,49 @@
+{% from 'bootstrap5/nav.html' import render_nav_item %}
+<!doctype html>
+<html lang="en">
+    <head>
+        {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+        <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+            <!-- <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet"> -->
+            <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.svg') }}">
+
+        {% endblock %}
+
+        <title>Template DTOP</title>
+
+        {% endblock %}
+    </head>
+    <body>
+        <section class="container-fluid" id="logo">
+            <div class="container">
+                <a href="/">
+                    <picture>
+                        <source media="(min-width: 768px)" srcset="{{ url_for('static', filename='img/mimick.png') }}">
+                        <img class="resp" alt="Mimick Logo" src="{{ url_for('static', filename='img/mimick.png') }}" width = "250">
+                    </picture>
+                </a>
+            </div>
+        </section>
+
+        <section class="container-fluid" id="main-content">
+            <div class="container">
+                <!-- Each page content -->
+                {% block content %}{% endblock %}
+            </div>
+        </section>
+
+        {% block scripts %}
+            <!-- Optional JavaScript -->
+            {{ bootstrap.load_js() }}
+        {% endblock %}
+    </body>
+</html>
