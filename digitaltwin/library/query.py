@@ -13,7 +13,7 @@ import os
 
 @app.route('/Home', methods=['GET', 'POST'])
 def Nominal():
-    form={'Query':'What is the material properties of the components?'}
+    form={'Query':'What is the material  properties of the components?'}
     return render_template('home.html', form=form, date=date)
 
 @app.route('/Home_sub', methods=['GET', 'POST'])
@@ -22,3 +22,7 @@ def Query():
     query = request.get('Query')
     print(query)
     return render_template('home.html', form=form, date=date)
+
+'''
+<!--<td><input type="text" id="Query" name="Query" step=any value="{{form['Query']}}"></td> -->
+'''
