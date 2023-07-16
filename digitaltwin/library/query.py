@@ -21,7 +21,7 @@ def Query():
     req = request.form
     query = req.get('Query')
     print(query)
-    return render_template('home_2.html', date=date)
+    return render_template('home.html', date=date)
 
 '''
 <!--<td><input type="text" id="Query" name="Query" step=any value="{{form['Query']}}"></td> -->
