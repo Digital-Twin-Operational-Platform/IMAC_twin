@@ -10,6 +10,8 @@ import glob
 from py2neo import Node
 import numpy as np
 import re
+import os
+import csv
 # from py2neo import Relationship    # added later 
 
 class Relation():
@@ -80,96 +82,65 @@ class Relation():
 
 
 
-class User2Data(Relation):
-    label = "User_created_Data"
-    startNodeType = "User"
-    endNodeType = "Data"
-    inverse = ['data created by user']
-    equivalence = ['generated', "input", "produced"]
-    def __init__(self, username, Data_index):
-        super().__init__(self.startNodeType, self.endNodeType, username, Data_index, self.label)
+class Product2Component(Relation):
+    label = "contains"
+    startNodeType = "Product"
+    endNodeType = "Component"
+    inverse = ['belongs_to']
+    equivalence = ['includes', "has", "consists"]
+    def __init__(self, Product_name, Component_name):
+        super().__init__(self.startNodeType, self.endNodeType, Product_name, Component_name, self.label)
 
 
-class Model2Data(Relation):
-    label = "learning_from"
-    startNodeType = "Model"
-    endNodeType = "Data"
-    inverse = ['Train the Model']
-    equivalence = ['parameters', "system input"]
-    def __init__(self, Model_name, Data_name):
-        super().__init__(self.startNodeType, self.endNodeType,Model_name, Data_name, self.label, bidirection=True)
+class Component2Material(Relation):
+    label = "is_made_of"
+    startNodeType = "Component"
+    endNodeType = "Material"
+    inverse = ['makes']
+    equivalence = ['contains', "has"]
+    def __init__(self, Component_name, Material_name):
+        super().__init__(self.startNodeType, self.endNodeType,Component_name, Material_name, self.label, bidirection=True)
 
-class Model2User(Relation):
-    label = "Input_output"
-    startNodeType = "Model"
-    endNodeType = "User"
-    inverse = ['Data to Model']
-    equivalence = ['parameters', "system input"]
-    def __init__(self, Model_name, User_name):
-        super().__init__(self.startNodeType, self.endNodeType,Model_name, User_name, self.label, bidirection=True)
-
-class Model2Experiment(Relation):
-    label = "Input_output"
-    startNodeType = "Model"
-    endNodeType = "Experiment"
-    inverse = ['Data to Model']
-    equivalence = ['parameters', "system input"]
-    def __init__(self, Model_name, Experiment_name):
-        super().__init__(self.startNodeType, self.endNodeType,Model_name, Experiment_name, self.label, bidirection=True)
 
 
 ##########################################
 class Relations:
-    rel_User2Data = []
-    rel_Model2Data = []
-    rel_Model2User = []
-    rel_Model2Experiment = []
-    
+    rel_Product2Component = []
+    rel_Component2Material = []    
 
-    def add_User2Data(self, User_name, Data_index):
-        r = User2Data(User_name, Data_index)
-        self.rel_User2Data.append(r)
+    def add_Product2Component(self, Product_name, Component_name):
+        r = Product2Component(Product_name, Component_name)
+        self.rel_Product2Component.append(r)
 
-    def add_Model2Data(self, Model_name, Data_name):
-        r = Model2Data(Model_name, Data_name)
-        self.rel_Model2Data.append(r)
-
-    def add_Model2User(self, Model_name, User_name):
-        r = Model2User(Model_name, User_name)
-        self.rel_Model2User.append(r)
-
-    def add_Model2Experiment(self, Model_name, Experiment_name):
-        r = Model2Experiment(Model_name, Experiment_name)
-        self.rel_Model2Experiment.append(r)
-
+    def add_Component2Material(self, Component_name, Material_name):
+        r = Component2Material(Component_name, Material_name)
+        self.rel_Component2Material.append(r)
         
     def extractAllRelation(self, fileFolder):
         print("extracting all the relations")
         ############################################
-        ############################################
-        self.add_Model2Data("Average", "Data")
-        self.add_Model2User("Average", "User")
-        self.add_Model2Experiment("Average", "Experiment")
-        list_ = glob.glob(fileFolder + "*dataBenchmark*.csv")
+        list_ = glob.glob(fileFolder + "*Product*.csv")
         for i in range(0, len(list_)):
-            index_ = re.findall(r'\d+', list_[i])[0]
-            result = re.search(fileFolder + '(.*)_dataBenchmark', list_[i])
-            author_ = result.group(1)
-            self.add_User2Data(author_, index_)
-            print(i)
-            
+            file_name =  os.path.basename(list_[i])   
+            file_name =  re.search('(.*).csv', file_name)
+            file_name =  file_name.group(1)
+            with open(list_[i], newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    self.add_Product2Component(file_name, row['Component'])
+                    self.add_Component2Material(row['Component'], row['Material'])
+                    
     
     def allRelations(self):
-        return self.rel_User2Data + self.rel_Model2Data + self.rel_Model2User + self.rel_Model2Experiment
+        return self.rel_Product2Component + self.rel_Component2Material
         
-filefolder = "/home/shen/TEC_twin/knowledgeGraph/Data/"
+filefolder = "/home/shen/IMAC_twin/digitaltwin/library/Data/"
 if __name__ == "__main__":
     #e = Relations()
     #e.extractAllRelation(filefolder)
-    #print(e.allRelations())
+    #rint(e.allRelations())
     print("")
         
-
     
         
         

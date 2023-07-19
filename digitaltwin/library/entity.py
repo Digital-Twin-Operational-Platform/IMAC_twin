@@ -153,14 +153,14 @@ class Entities():
 # Input_list = glob.glob("/home/shen/Cristallo/dtApp/dtData/knowledgeGraph/*_input.npy")
 # num_ = len(Input_list)        
 
-filefolder = "/home/shen/IMAC_twin/Data/"
+filefolder = "/home/shen/IMAC_twin/digitaltwin/library/Data/"
 if __name__ == "__main__":
     print()
     #datafile = pd.ExcelFile("../data/Data.xlsx")
-    e = Entities()
-    e.extractAllNodes(filefolder)
-    print(e.allNodes())
+    #e = Entities()
+    #e.extractAllNodes(filefolder)
+    #print(e.allNodes())
     # print(Entities.labeldic())
     # e.labeldic()
     
-os.path.basename("/home/shen/IMAC_twin/Data/Product_1.csv")
+

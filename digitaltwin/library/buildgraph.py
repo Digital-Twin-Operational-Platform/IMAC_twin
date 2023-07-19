@@ -6,8 +6,8 @@ Created on Mon Apr 24 14:09:23 2023
 """
 
 from py2neo import Graph, Node, NodeMatcher
-import test_entity as et
-import test_relation as rel
+import entity as et
+import relation as rel
 import time
 import glob
 import csv
@@ -78,7 +78,7 @@ class BuildGraph:
         print("Edges: ", len(self.g.relationships))
     
 
-filefolder = "/home/shen/TEC_twin/knowledgeGraph/Data/"
+filefolder = "/home/shen/IMAC_twin/digitaltwin/library/Data/"
 if __name__ == "__main__":
     #   create a Entities object which stores different kinds of nodes
     n = et.Entities()
