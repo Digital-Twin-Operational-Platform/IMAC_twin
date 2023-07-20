@@ -10,14 +10,17 @@ This functions takes the input from the query box on the home page of the app.
 
 from flask import render_template, request
 import os
-from ..digitaltwin import bp
+#from ..digitaltwin import bp
 import json
 import entity
 import relation
 import nltk
 import string
+from py2neo import Graph, Node, NodeMatcher
 from nltk.util import everygrams
-nltk.download('wordnet')
+# nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('omw-1.4')
 
 class WrdList:
     def __init__(self, wordlist, wordtype, wordproperty):
@@ -31,41 +34,33 @@ class QuestionPaser:
         self.txt = txt.lower()
         # TODO create a list of keyword dictionaries, to be match from a natural language question
         with open('nodeList.json') as f:
-            self.nodelist = json.load(f)
+            nodelist = json.load(f)
+            # print(nodelist)
+            self.nodelist = {k.lower(): { m.lower(): [o.lower() for o in n] for m, n in v.items()} for k, v in nodelist.items()}
+            #print(self.nodelist)
 
         ####################################################
         #    Data
-        self.wrdsData_index = list(v for v in self.nodelist["Data"]["Data_index"])
-        self.wrdListData_index = WrdList(self.wrdsData_index, "Data", "Data_index")
+        self.wrdsProduct_name = list(v for v in self.nodelist["product"]["product_name"])
+        self.wrdListProduct_name = WrdList(self.wrdsProduct_name, "product", "product_name")
         ######
-        self.wrdsTimeStamp = list(v for v in self.nodelist["Data"]["TimeStamp"])
-        self.wrdListTimeStamp = WrdList(self.wrdsTimeStamp, "Data", "TimeStamp")
+        self.wrdsProduct_TimeStamp = list(v for v in self.nodelist["product"]["timestamp"])
+        self.wrdListProduct_TimeStamp = WrdList(self.wrdsProduct_TimeStamp, "product", "timestamp")
         ######
-        self.wrdsuEst_Array = list(v for v in self.nodelist["Data"]["uEst_Array"])
-        self.wrdListuEst_Array = WrdList(self.wrdsuEst_Array, "Data", "uEst_Array")
+        self.wrdsComponent_name = list(v for v in self.nodelist["component"]["component_name"])
+        self.wrdListComponent_name = WrdList(self.wrdsComponent_name, "component", "component_name")
         #####
-        self.wrdsuVal_Array = list(v for v in self.nodelist["Data"]["uVal_Array"])
-        self.wrdListuVal_Array = WrdList(self.wrdsuVal_Array, "Data", "uVal_Array")
+        self.wrdsMaterial_name = list(v for v in self.nodelist["material"]["material_name"])
+        self.wrdListMaterial_name = WrdList(self.wrdsMaterial_name, "material", "material_name")
         #####
-        self.wrdsyEst_Array = list(v for v in self.nodelist["Data"]["yEst_Array"])
-        self.wrdListyEst_Array = WrdList(self.wrdsyEst_Array, "Data", "yEst_Array")
+        self.wrdsMaterial_YoungModulus = list(v for v in self.nodelist["material"]["youngs_modulus"])
+        self.wrdListMaterial_YoungModulus = WrdList(self.wrdsMaterial_YoungModulus, "material", "youngs_modulus")
         #####
-        self.wrdsyVal_Array = list(v for v in self.nodelist["Data"]["yVal_Array"])
-        self.wrdListyVal_Array = WrdList(self.wrdsyVal_Array, "Data", "yVal_Array")
+        self.wrdsMaterial_Density = list(v for v in self.nodelist["material"]["density"])
+        self.wrdListMaterial_Density = WrdList(self.wrdsMaterial_Density, "material", "density")
         ####################################################
-        #    Model
-        self.wrdsModel_name = list(v for v in self.nodelist["Model"]["Model_name"])
-        self.wrdListModel_name = WrdList(self.wrdsModel_name, "Model", "Model_name")
         ####################################################
-        #    User
-        self.wrdsUser_name = list(v for v in self.nodelist["User"]["User_name"])
-        self.wrdListUser_name = WrdList(self.wrdsUser_name, "User", "User_name")
-        ####################################################
-        #    Experiment
-        self.wrdsExperiment_name = list(v for v in self.nodelist["Experiment"]["Experiment_name"])
-        self.wrdListExperiment_name = WrdList(self.wrdsExperiment_name, "Experiment", "Experiment_name")
-        ####################################################
-        self.targetWordLists = [self.wrdListData_index, self.wrdListTimeStamp, self.wrdListModel_name, self.wrdListUser_name, self.wrdListExperiment_name]
+        self.targetWordLists = [self.wrdListProduct_name, self.wrdListProduct_TimeStamp, self.wrdListComponent_name, self.wrdListMaterial_name, self.wrdListMaterial_YoungModulus, self.wrdListMaterial_Density, self.wrdListMaterial_Density]
 
     def wrddict(self):  # build a dictionary key as {name:[*wordtype]}
         wd_dict = {}
@@ -107,11 +102,11 @@ class QuestionPaser:
         nodeTypes = []
         parsedQuestion = self.nGram(3)
         wrdDict = self.wrddict()
-        relationdict = test_relation.Relation.getRelationDict()
-        relationEqDict = test_relation.Relation.getEquivalenceDict()
-        relationInvDict = test_relation.Relation.getInverseDict()
-        entityDict = test_entity.myNode.getNodeDict()
-
+        relationdict = relation.Relation.getRelationDict()
+        relationEqDict = relation.Relation.getEquivalenceDict()
+        relationInvDict = relation.Relation.getInverseDict()
+        entityDict = entity.myNode.getNodeDict()
+        
         for word in parsedQuestion:
             if word in wrdDict:
                 for v in wrdDict[word]:
@@ -127,12 +122,15 @@ class QuestionPaser:
                 nodeTypes.append(entityDict[word])
 
         for r in relations:
-            snode = relationdict[r].startnodetype
-            enode = relationdict[r].endnodetype
+            snode = relationdict[r].startNodeType
+            enode = relationdict[r].endNodeType
+            snode = snode.lower()
+            enode = enode.lower()
+            print(snode, enode)
             for i in entities:
                 if i[1][0] == snode:
                     sqls.append(
-                        f"MATCH (n:{snode})-[r:{r}]->(m:) where n.{i[1][1]} = '{i[0]}' RETURN r")
+                        f"MATCH (n:{snode})-[r:{r}]->(m: {enode}) where n.{i[1][1]} = '{i[0]}' RETURN m")
                 if i[1][0] == enode:
                     sqls.append(
                         f"MATCH (n)-[r:{r}]->(m:{enode}) where n.{i[1][1]} = '{i[0]}' RETURN r")
@@ -141,11 +139,23 @@ class QuestionPaser:
             for i in entities:
                 sqls.append(
                     f"MATCH (n:{[1][0]}) where n.{i[1][1]} = '{i[0]}' RETURN n")
-
+        
         return sqls, entities, relations, nodeTypes
 
+    
+q = QuestionPaser("What is the material name of Nut_4mm.22")
+#q = QuestionPaser("When did product_1 created?")
+# print(q.parseQuestion())
+print("")
+#print(q.toSqls()[0])
+g = Graph("http://localhost:7474", auth=("neo4j", "123456"))
+#g.run(q.toSqls()[0]).data()
 
+results = g.run("MATCH (n:component)-[r:is_made_of]->(m: material) where n.component_name = 'nut_4mm.22' RETURN m").data()
 
+print(results)
+
+"""
 @bp.route('/home_sub', methods=['GET', 'POST'])
 def Query():
     query = request.form['Query']
@@ -154,4 +164,4 @@ def Query():
     
     return render_template("home_2.html", result=query)
 
-
+"""

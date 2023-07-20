@@ -10,6 +10,7 @@ from .routes import module1
 @bp.route('/')
 @bp.route('/home')
 @bp.route('/index')
+@bp.route('/home_sub')
 def home():
     return render_template('home.html')
 

@@ -11,6 +11,9 @@ from ..digitaltwin import bp # the ..digitaltwin tells the directory to look at 
 from flask import render_template
 
 from ..library import query
+from ..library import entity
+from ..library import relation
+from ..library import buildgraph
 
 @bp.route("/help")
 def help():

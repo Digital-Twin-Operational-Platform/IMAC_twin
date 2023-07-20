@@ -84,8 +84,8 @@ class Relation():
 
 class Product2Component(Relation):
     label = "contains"
-    startNodeType = "Product"
-    endNodeType = "Component"
+    startNodeType = "product"
+    endNodeType = "component"
     inverse = ['belongs_to']
     equivalence = ['includes', "has", "consists"]
     def __init__(self, Product_name, Component_name):
@@ -94,10 +94,10 @@ class Product2Component(Relation):
 
 class Component2Material(Relation):
     label = "is_made_of"
-    startNodeType = "Component"
-    endNodeType = "Material"
+    startNodeType = "component"
+    endNodeType = "material"
     inverse = ['makes']
-    equivalence = ['contains', "has"]
+    equivalence = ['contains', "has", "material name"]
     def __init__(self, Component_name, Material_name):
         super().__init__(self.startNodeType, self.endNodeType,Component_name, Material_name, self.label, bidirection=True)
 
@@ -127,8 +127,8 @@ class Relations:
             with open(list_[i], newline='') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
-                    self.add_Product2Component(file_name, row['Component'])
-                    self.add_Component2Material(row['Component'], row['Material'])
+                    self.add_Product2Component(file_name.lower(), row['Component'].lower())
+                    self.add_Component2Material(row['Component'].lower(), row['Material'].lower())
                     
     
     def allRelations(self):
