@@ -34,7 +34,6 @@ class BuildGraph:
         labeldict = et.Entities.labeldic()
         # print(labeldict)
         # tx = self.g.begin()
-        # i = 0
         for r in relations:
             # print(r.__repr__())
             # tx.create(r)
@@ -86,6 +85,7 @@ if __name__ == "__main__":
     #   extract all nodes and relations 
     n.extractAllNodes(filefolder)
     e.extractAllRelation(filefolder)
+    print(len(n.allNodes()) ,len(e.allRelations()))
     #   create a BuildGraph object
     g = BuildGraph(n, e)
     # print("Finished 5")

@@ -10,10 +10,12 @@ This functions takes the input from the query box on the home page of the app.
 
 from flask import render_template, request
 import os
-#from ..digitaltwin import bp
+from ..digitaltwin import bp
 import json
-import entity
-import relation
+#import entity
+#import relation
+from ..library import entity
+from ..library import relation
 import nltk
 import string
 from py2neo import Graph, Node, NodeMatcher
@@ -33,7 +35,7 @@ class QuestionPaser:
     def __init__(self, txt):
         self.txt = txt.lower()
         # TODO create a list of keyword dictionaries, to be match from a natural language question
-        with open('nodeList.json') as f:
+        with open('/home/shen/IMAC_twin/digitaltwin/library/nodeList.json') as f:
             nodelist = json.load(f)
             # print(nodelist)
             self.nodelist = {k.lower(): { m.lower(): [o.lower() for o in n] for m, n in v.items()} for k, v in nodelist.items()}
@@ -142,26 +144,23 @@ class QuestionPaser:
         
         return sqls, entities, relations, nodeTypes
 
-    
+"""    
 q = QuestionPaser("What is the material name of Nut_4mm.22")
-#q = QuestionPaser("When did product_1 created?")
-# print(q.parseQuestion())
-print("")
-#print(q.toSqls()[0])
 g = Graph("http://localhost:7474", auth=("neo4j", "123456"))
-#g.run(q.toSqls()[0]).data()
 
 results = g.run("MATCH (n:component)-[r:is_made_of]->(m: material) where n.component_name = 'nut_4mm.22' RETURN m").data()
-
 print(results)
-
 """
+
 @bp.route('/home_sub', methods=['GET', 'POST'])
 def Query():
     query = request.form['Query']
-    #print(query)
-    #return "Text extracted successfully"
-    
-    return render_template("home_2.html", result=query)
+    print(query)
+    g = Graph("http://localhost:7474", auth=("neo4j", "123456"))
+    q =  QuestionPaser(str(query))
+    print(q.toSqls()[0][0])
+    results = g.run(q.toSqls()[0][0]).data()
+    print(results)
+    return render_template("home_2.html", result=results)
 
-"""
+

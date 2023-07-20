@@ -132,13 +132,15 @@ class Relations:
                     
     
     def allRelations(self):
+        #return self.rel_Component2Material
         return self.rel_Product2Component + self.rel_Component2Material
         
 filefolder = "/home/shen/IMAC_twin/digitaltwin/library/Data/"
 if __name__ == "__main__":
     #e = Relations()
     #e.extractAllRelation(filefolder)
-    #rint(e.allRelations())
+    #print(e.allRelations())
+    #print(len(e.allRelations()))
     print("")
         
     

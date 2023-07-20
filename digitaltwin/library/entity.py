@@ -60,7 +60,7 @@ class Material(myNode):
     def __init__(self, name_, E_, density_):
         self.nodeProperties = {}
         self.nodeProperties["material_name"] = name_
-        self.nodeProperties["youngs_Modulus"] = E_
+        self.nodeProperties["youngs_modulus"] = E_
         self.nodeProperties["density"] = density_
         super().__init__(self.nodeType, **self.nodeProperties)
 
@@ -143,7 +143,7 @@ class Entities():
                         if row['Material'] == self.list_Material[j]['material_name']:
                             count += 1
                     if count == 0:
-                        self.add_Material(row['Material'], row['Young Modulus'], row['Density'])
+                        self.add_Material(row['Material'].lower(), row['Young Modulus'], row['Density'])
     
         
     def extractAllNodes(self, fileFolder):
@@ -162,12 +162,12 @@ filefolder = "/home/shen/IMAC_twin/digitaltwin/library/Data/"
 if __name__ == "__main__":
     print()
     #datafile = pd.ExcelFile("../data/Data.xlsx")
-    #e = Entities()
-    #e.extractAllNodes(filefolder)
+    e = Entities()
+    e.extractAllNodes(filefolder)
     #h = e.MaterialNodes()
     #print(len(h))
     #print(h[0]['Material_name'])
-    #print(e.allNodes())
+    print(e.allNodes())
     # print(Entities.labeldic())
     # e.labeldic()
     
