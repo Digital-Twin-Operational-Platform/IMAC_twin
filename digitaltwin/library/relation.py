@@ -5,14 +5,12 @@ Created on Mon Apr 24 10:41:30 2023
 @author: me1xs
 """
 
-# from py2neo import Node
+
 import glob
-from py2neo import Node
-import numpy as np
 import re
 import os
 import csv
-# from py2neo import Relationship    # added later 
+
 
 class Relation():
     # Define a relation class which contains index, input, frequency, FRF

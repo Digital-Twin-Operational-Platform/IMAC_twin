@@ -1,7 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import glob
-from py2neo import Node, Graph
+from py2neo import Node
 import json
 import re
 import csv
