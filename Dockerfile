@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.8.0-slim
+FROM python:3.10.0-slim
 
 # Set working directory
 WORKDIR /digitaltwin

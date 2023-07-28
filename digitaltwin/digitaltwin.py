@@ -3,7 +3,7 @@ This is the main function that creates the blueprint, imports in the modules, an
 """
 from flask import render_template, request, redirect, url_for, flash, abort, session, jsonify, Blueprint
 
-bp = Blueprint('templateDTOP', __name__) # Creates the name of the app
+bp = Blueprint('IMAC_DTOP', __name__) # Creates the name of the app
 
 from .routes import module1
 

@@ -9,20 +9,15 @@ This functions takes the input from the query box on the home page of the app.
 '''
 
 from flask import render_template, request
-import os
 from ..digitaltwin import bp
 import json
-#import entity
-#import relation
 from ..library import entity
 from ..library import relation
 import nltk
 import string
-from py2neo import Graph, Node, NodeMatcher
+from py2neo import Graph
 from nltk.util import everygrams
-# nltk.download('wordnet')
-# nltk.download('punkt')
-# nltk.download('omw-1.4')
+
 
 class WrdList:
     def __init__(self, wordlist, wordtype, wordproperty):

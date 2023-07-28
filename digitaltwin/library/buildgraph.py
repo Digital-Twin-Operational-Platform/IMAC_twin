@@ -6,13 +6,9 @@ Created on Mon Apr 24 14:09:23 2023
 """
 
 from py2neo import Graph, Node, NodeMatcher
-import entity as et
-import relation as rel
-import time
-import glob
-import csv
-import os.path
-import re
+from digitaltwin.library import entity as et
+from digitaltwin.library import relation as rel
+
 
 class BuildGraph:
     # a BuildGraph class takes a list of nodes and edges
