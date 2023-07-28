@@ -10,16 +10,146 @@
 </div>
 
 
-<div>
-<p> Query the digital twin</p>
+<div class="wrapper">
+<!-- <p> Query the digital twin </p> -->
     <form action="/home_sub" method="POST">
-      <td><input type="text" id="Query" name="Query" step=any placeholder="What is the material properties of the components?", size="50",style="color: grey;"></td>
+      <td><input type="text" id="Query" name="Query" step=any placeholder="What is the material name of Nut_4mm.22?", size="50",style="color: grey;"></td>
       <button type="submit">Search</button>
     </form>
  
     <p>Results: {{result}}</p>
 
 </div>
+
+
+<br>
+<br>
+
+<div class="row">
+  <div class="col-md-4">
+    <div>
+
+  <iframe src="https://soton243.autodesk360.com/g/shares/SH919a0QTf3c32634dcf95b180cdf3576ad4" width="425" height="550"></iframe>
+    </div>
+  </div>
+
+
+
+  <div class="col-md-5">
+    <div class="div2">
+      <h2 id="a">Generate FEA Model</h2>
+      <form action="/FEA_sub" method="POST">
+        <fieldset>
+          <legend>General Properties:</legend>
+          <table>
+            <tr>
+              <td>Maximum Frequency</td>
+              <td style="text-align:right">\(\omega_{max}=\)</td>
+              <td><input type="number" id="freq" name="freq" min="0"  step=any value="40"></td>
+              <td>[Hz]</td>
+            </tr>
+            <tr>
+              <td>Job Name</td>
+              <td style="text-align:right">\(Name=\)</td>
+              <td><input type="text" id="job" name="job" min="0"  step=any value="Frequency-Tests"></td>
+              <td></td>
+            </tr>
+          </table>
+        </fieldset>
+        <fieldset>
+          <legend>Material Properties:</legend>
+          <table>
+            <tr>
+              <td>Young's Modulus</td>
+              <td style="text-align:right">\(E=\)</td>
+              <td><input type="number" id="E" name="E" min="0" step=any value="10150000.0" oninput="120"></td>
+              <td>[MPa]</td>
+            </tr>
+            <tr>
+              <td>Poisson's Ratio</td>
+              <td style="text-align:right">\(\nu=\)</td>
+              <td><input type="number" id="Nu" name="Nu" min="0" step=any value="0.33"></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Density</td>
+              <td style="text-align:right">\(\rho=\)</td>
+              <td><input type="number" id="rho" name="rho" min="0" step=any value="0.00025265" oninput="200"></td>
+              <td>[kg/m<sup>3</sup>]</td>
+            </tr>
+          </table>
+        </fieldset>
+        <fieldset>
+          <legend>Mesh Properties:</legend>
+          <table>
+            <tr>
+              <td>Floor Pannel</td>
+              <td style="text-align:right">Mesh Seed</td>
+              <td><input type="number" id="fl_mesh" name="fl_mesh" min="0" step=any value="0.5"></td>
+              <td>[in]</td>
+            </tr>
+            <tr>
+              <td>Verticle Support</td>
+              <td style="text-align:right">Mesh Seed</td>
+              <td><input type="number" id="lg_mesh" name="lg_mesh" min="0" step=any value="0.5"></td>
+              <td>[in]</td>
+            </tr>
+            <tr>
+              <td>Mounting Plate</td>
+              <td style="text-align:right">Mesh Seed</td>
+              <td><input type="number" id="mt_mesh" name="mt_mesh" min="0" step=any value="0.5"></td>
+              <td>[in]</td>
+            </tr>
+            <tr>
+              <td>Foot Connector</td>
+              <td style="text-align:right">Mesh Seed</td>
+              <td><input type="number" id="ft_mesh" name="ft_mesh" min="0" step=any value="0.5"></td>
+              <td>[in]</td>
+            </tr>
+          </table>
+        </fieldset>
+        <br>
+        <button type="submit">Run on ABAQUS</button>
+	<button type="submit">Validate</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="container">
+      <a href="/">
+	<img src="{{ url_for('static', filename='img/Model.png') }}", alt="HTML5 Icon" width="120" height="200" >
+	<img src="{{ url_for('static', filename='img/exchange.svg') }}", alt="uncertainty" width="10" height="20" class="expValidationImageCenter">
+	<img src="{{ url_for('static', filename='img/Structure.jpg') }}", alt="HTML5 Icon" width="120" height="200" >
+      </a>
+
+      <br>
+      <br>
+      <br>
+
+      <div class="chart" id="chart">
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+	<script>
+	  var graphs = {{plot3 | safe}};
+	  var aspectRatio = 16/ 16;
+	  var container = document.getElementById('chart');
+	  var width = container.offsetWidth;
+	  var height = width / aspectRatio;
+	  // update the layout with the new width and height
+	  var layout = {
+	      width: width,
+	      height: height
+	  };
+	  Plotly.plot('chart', graphs, {});
+	  </script>
+    </div>
+  </div>
+    
+</div>
+
+
 
 
 
