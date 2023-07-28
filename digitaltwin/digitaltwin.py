@@ -7,12 +7,14 @@ bp = Blueprint('templateDTOP', __name__) # Creates the name of the app
 
 from .routes import module1
 
+from .library.crossvalidation import graph3
+
 @bp.route('/')
 @bp.route('/home')
 @bp.route('/index')
 @bp.route('/home_sub')
 def home():
-    return render_template('home.html')
+    return render_template('home.html', plot3=graph3)
 
 @bp.app_errorhandler(404)
 def page_not_found(error):

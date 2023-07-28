@@ -151,6 +151,7 @@ g = Graph("http://localhost:7474", auth=("neo4j", "123456"))
 results = g.run("MATCH (n:component)-[r:is_made_of]->(m: material) where n.component_name = 'nut_4mm.22' RETURN m").data()
 print(results)
 """
+from ..library.crossvalidation import graph3
 
 @bp.route('/home_sub', methods=['GET', 'POST'])
 def Query():
@@ -161,6 +162,6 @@ def Query():
     print(q.toSqls()[0][0])
     results = g.run(q.toSqls()[0][0]).data()
     print(results)
-    return render_template("home_2.html", result=results)
+    return render_template("home_2.html", result=results, plot3=graph3)
 
 
