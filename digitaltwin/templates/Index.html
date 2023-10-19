@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="path_to_jq_ui"></script>
+    <link rel="stylesheet" href="../static/styles/home.css">
+    <title>Document</title>
+</head>
+<body>
+
+    <section class="container-fluid" id="logo">
+        <div class="container">
+            <a href="/">
+                <picture>
+                    <source media="(min-width: 768px)" srcset="{{ url_for('static', filename='img/mimick.png') }}">
+                    <img class="resp" alt="Mimick Logo" src="{{ url_for('static', filename='img/mimick.png') }}" width = "300">
+                </picture>
+            </a>
+        </div>
+    </section>
+
+        <!-- Placeholder for Flash Error -->
+        <div class="flash">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+    <p>
+        <div class="form">
+            <div>
+                <form action="{{ url_for('Home.homeController' )}}" method="POST" enctype="multipart/form-data">
+                    
+                    <div id="existingFile">
+                        <h2>Select an existing project</h2>
+                    </div>
+
+                    <!-- Option for selecting existing files -->
+                    <div name="folder">
+                        <select name="project" id="project">
+                            {%for file in data1%}
+                            <option value="{{file}}">{{(file)}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                    <button type ="submit" class="button" name="button" value="NewHm"><b>Submit</b></button>
+
+                    </div>
+                    <div id="centretxt">or</div>
+                    <div>
+
+                    <!-- New Project Entry -->
+                    <div id="txt">
+                        <input type="text" id="name" name="Project_Name" />
+                        <span></span>
+                        <label>Project Name</label>
+                    </div>
+                    <div id="sel">
+                        <input type="file" id="file_name" name="file_name" webkitdirectory directory multiple /> <!--accept=".CATProduct" -->
+                    </div>
+                    <button type ="submit" class="button" name="button" value="OldHm"><b>Submit</b></button>
+
+                </form>
+            </div>
+            </p>
+            </div>      
+        <div>
+    
+</body>
+</html>

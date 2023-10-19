@@ -10,6 +10,7 @@ For development purposes, all the calculations can be done here, but that will m
 from ..digitaltwin import bp # the ..digitaltwin tells the directory to look at the parent folder
 from flask import render_template
 
+
 @bp.route("/help")
 def help():
     return render_template("help.html")

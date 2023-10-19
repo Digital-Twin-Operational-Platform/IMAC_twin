@@ -13,5 +13,10 @@ def create_app(test_config = None):
     from . import digitaltwin
     app.register_blueprint(digitaltwin.bp)
 
+    from .library.Flask_Controller import Home, Mesh, Sensor
+    app.register_blueprint(Home.bp)
+    app.register_blueprint(Mesh.bp)
+    app.register_blueprint(Sensor.bp)
+
     return app
 

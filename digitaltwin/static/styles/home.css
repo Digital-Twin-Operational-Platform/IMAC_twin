@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(97, 97, 97, 0.137);
+}
+
+#logo {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.flash {
+    margin-left: 20px;
+}
+
+.form{
+    text-align: center;
+}
+
+#txt {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#sel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.button{
+    margin-top: 10px;
+    width: 5em;  height: 2em;
+}
+
+
+/* For plotly */
+/* #content .content {
+    display:inline-block;
+    
+} */
+
+#content {
+    /* position: absolute; */
+    margin-left: 1%;
+} 
+.content {
+
+    margin-top: 1%;
+    margin-left: 50%;
+}
+script{
+    margin-left: 50%;
+}
+

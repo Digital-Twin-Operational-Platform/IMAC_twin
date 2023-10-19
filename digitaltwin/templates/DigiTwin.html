@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src='https://cdn.plot.ly/plotly-latest.min.js' charset='utf-8'></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="path_to_jq_ui"></script>
+        <script src="../static/js/plotly.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="../static/styles/index.css">
+        
+        <!-- <title>{% block title %}{% endblock %} Document</title> -->
+    </head>
+
+    <body>
+        <div id="nav">
+                <nav>
+                    <ul>
+                        <li>
+                            <a onclick=ssropen()>Sensor</a>
+                        </li>
+                        <li>
+                            <a onclick=mshopen()>Mesh</a>
+                        </li>
+                        <li>
+                            <a onclick=kgqopen()>Querry</a>
+                        </li>
+                        <li>
+                            <div id="Logo">
+                                <a href="/">
+                                    <picture><img src="{{ url_for('static', filename='img/mimick.png') }}" alt="Mimick Logo"></picture>
+                                </a>
+                            </div>
+                            
+                        </li>
+
+                    </ul>
+                </nav>
+
+        </div>
+
+        </div>
+
+        <!-- Sensor Form---------------------------------------------------------------------- -->
+        <div id="frm1" style="display:none;">
+            <div class="form">
+                <div class="flash">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <form  action="{{ url_for('Sensor.snsrController' )}}" method="post" enctype="multipart/form-data">              
+                    <div id="txt">
+                        <label class="lbl" for="SnsrDatum">Datum</label>
+                        <input type="text" id="SnsrDatum" name="SnsrDatum" placeholder="Click on image to select a ref point.">
+                    </div>
+    
+                    <div id="Plane">
+                        <label class="lbl" for="inpDir">Direction of measurement</label>
+                        <select name="Dir" id="inpDir" >
+                            <option value="xy">XY</option>
+                            <option value="yz">YZ</option>
+                            <option value="zx">XZ</option>
+                        </select>
+                    </div>
+    
+                    <div id="sel">
+                        <label class="lbl" for="ssr_file_name">File_Uplaod</label>
+                        <input type="file" id="ssr_file_name" name="ssr_file_name" accept=".csv" /> <!--accept=".CATProduct" -->
+                    </div>
+    
+                    <button type ="submit" class="button" name="button" value="New"><b>Submit</b></button>
+                    
+                    <div>
+                        <h3 class="or">Or select from existing sensors</h3>
+                    </div>
+
+                    <!-- Option to select existing files -->
+                    <div id="selector">
+                        <label class="lbl" for="snsrFile">Sensor</label>
+                        <select name="snsrFile" id="snsrFile">
+                            {%for file in data2%}
+                            <option value="{{file}}">{{(file.split('.')[0])}}</option>
+                            {%endfor%}
+                        </select>                        
+                    </div>
+                    <button type ="submit" class="button" name="button" value="Old"><b>Submit</b></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <!-- Mesh Form---------------------------------------------------------------------- -->
+        <div id="frm2" style="display:none;">
+            <div class="form">
+                <div class="flash">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <form action="{{ url_for('Mesh.mshController')}}" method="post" enctype="multipart/form-data">
+                    <div>
+                        <label class="lbl" for="MSize">Mesh Size</label>
+                        <input type="text" name="MSize" placeholder="Enter mesh size between 1 and 20..." >
+                    </div>
+                    
+                    <button type ="submit" class="button" name="button" value="NewMsh"><b>Mesh</b></button>
+
+                    <div>
+                        <h3 class="or">Or select from existing Mesh Files</h3>
+                    </div>
+
+                    <!-- Option to select from existing mesh files -->
+                    <div id="selector">
+                        <label class="lbl" for="mshFile">Sensor</label>
+                        <select name="mshFile" id="snsrFile">
+                            {%for file in data2%}
+                            <option value="{{file}}">{{(file.split('.')[0])}}</option>
+                            {%endfor%}
+                        </select>                        
+                    </div>
+                    <button type ="submit" class="button" name="button" value="OldMsh"><b>Mesh</b></button>
+                    <br>
+                    <br>
+                    <button type ="submit" class="button" name="button" value="Solve"><b>Solve</b></button>
+                </form> 
+            </div>
+        </div>
+        
+        <!-- -------------------------------------------------------------------------------------------------- -->
+        <!-- Sensor Form---------------------------------------------------------------------- -->
+        <div id="frm3" style="display:none;">
+            <div class="form">
+                <div class="flash">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>            
+                    <div class="wrapper">
+                        <!-- <p> Query the digital twin </p> -->
+                            <form action="/home_sub" method="POST">
+                                <div>
+                                    <td><input type="text" id="Query" name="Query" step=any placeholder="What is the material name of Nut_4mm.22?", size="50",style="color: grey;"></td>
+                                </div>
+                              
+                              <button type="submit">Search</button>
+                            </form>
+                         
+                            <p>Results: {{result}}</p>
+                        
+                    </div>
+            </div>
+        </div>
+        
+        <div id="geom" class="geom"></div>  
+
+        <div class="plot">
+            <script type="text/javascript" >
+                var graph = {{ graphJSON|safe }}
+                var userval = myFunc(graph)
+            </script>
+        </div>
+
+        
+    </body>
+
+</html>

@@ -1,6 +1,15 @@
 # Template_DTOP
 This is the fundamental architecture for generating a new DTOP system
 
+## Requirements
+Ansys APDL must be installed in the device to use FEA Analysis feature.
+CATIA v5 must be installed in the device to generate Position.csv using 'CatPos.py'.
+
+## User Instruction
+The CAD files (.stl format) for each part used in the assembly must be saved in a single folder.
+The folder should also contain Position.csv file. This can be genrated by runing 'CatPos.py' in library/CatHelper.
+Enter location and name of the CATProduct file while calling the function. The file will be saved in the same location.
+
 ## Deployment Instruction
 There are two main methods for deploying this app
 
